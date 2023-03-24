@@ -46,6 +46,8 @@ public class UserService{
     @Transactional
     public void saveUser(User user) throws MessagingException, UnsupportedEncodingException {
         String hashSalt = generateRandomSalt();
+//        String password = "admin";
+//        user.setEmail("admin@mail.com");
         String password = generatePassword();
         user.setHashSalt(hashSalt);
         user.setPassword(passwordEncoder.encode(password + hashSalt));

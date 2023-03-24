@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/hall/*").permitAll()
                 .antMatchers("/style/*").permitAll()
                 .antMatchers("/group/*").permitAll()
+                .antMatchers("/timetable/*").permitAll()
                 .antMatchers("/users/get-user-data").hasAnyRole("CLIENT", "ADMIN", "TEACHER", "SUPER_ADMIN")
                 .anyRequest().authenticated();
 

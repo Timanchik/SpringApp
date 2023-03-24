@@ -1,14 +1,8 @@
 package com.microrent.backend.util;
 
 import com.microrent.backend.dto.*;
-import com.microrent.backend.models.Group;
-import com.microrent.backend.models.Hall;
-import com.microrent.backend.models.Style;
-import com.microrent.backend.models.User;
-import com.microrent.backend.repositories.HallRepository;
-import com.microrent.backend.repositories.StyleRepository;
-import com.microrent.backend.repositories.UserRepository;
-import com.microrent.backend.repositories.UserRoleRepository;
+import com.microrent.backend.models.*;
+import com.microrent.backend.repositories.*;
 import com.microrent.backend.util.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,12 +21,15 @@ public class DTOConverter {
 
     private final UserRepository userRepository;
 
+    private final GroupRepository groupRepository;
+
     @Autowired
-    public DTOConverter(UserRoleRepository userRoleRepository, HallRepository hallRepository, StyleRepository styleRepository, UserRepository userRepository) {
+    public DTOConverter(UserRoleRepository userRoleRepository, HallRepository hallRepository, StyleRepository styleRepository, UserRepository userRepository, GroupRepository groupRepository) {
         this.userRoleRepository = userRoleRepository;
         this.hallRepository = hallRepository;
         this.styleRepository = styleRepository;
         this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
     }
 
     public User convertToUser(UserDTO userDTO){
@@ -126,6 +123,23 @@ public class DTOConverter {
                 convertToHallDto(group.getHall()),
                 convertToStyleDto(group.getStyle()),
                 convertToTeacherDto(group.getTeacher()));
+    }
+
+    public TimetableDTO convertToTimetableDTO(Timetable timetable){
+        return new TimetableDTO(
+                timetable.getId(),
+                timetable.getDay(),
+                timetable.getClassTime(),
+                convertToGroupDto(timetable.getGroup())
+        );
+    }
+
+    public Timetable convertToTimetable(TimetableDTO timetableDTO){
+        Timetable timetable = new Timetable();
+        timetable.setDay(timetableDTO.getDay());
+        timetable.setClassTime(timetableDTO.getClassTime());
+        timetable.setGroup(groupRepository.findById(timetableDTO.getGroup().getId()).get());
+        return timetable;
     }
 
     private String visitDateConvertor(Date visitDate){

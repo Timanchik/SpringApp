@@ -1,6 +1,7 @@
 package com.microrent.backend.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Group_table")
@@ -28,6 +29,9 @@ public class Group {
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private User teacher;
+
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
+    private List<Timetable> timetables;
 
     public Group() {
     }
@@ -87,6 +91,14 @@ public class Group {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Timetable> getTimetables() {
+        return timetables;
+    }
+
+    public void setTimetables(List<Timetable> timetables) {
+        this.timetables = timetables;
     }
 
     @Override
